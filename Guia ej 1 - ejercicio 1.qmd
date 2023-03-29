@@ -1,0 +1,16 @@
+---
+title: "Ejercicio 1"
+format: html
+editor: visual
+lang: es
+---
+
+Los siguientes datos corresponden a un ejemplo hipotético de 10 empleados del área administrativa de una empresa.
+
+Las variables observadas para cada empleado son: Edad (años), Sexo, Sueldo y Antigüedad (en años al 31 de octubre)
+
+Ingresar los siguientes datos como una matriz de nombre "Datos.Empleados" donde cada fila identifique a cada individuo
+
+![](images/paste-3E93C6C5.png)
+
+a. Definir un vector con los datos de cada uno de los empleados.
