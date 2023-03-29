@@ -151,7 +151,7 @@ x + y
 x + z
 ```
 
-### **Ejercicio 9** 
+### **Ejercicio 9**
 
 Define el vector 𝑥 = (1,2,3,4,5,6). A partir de dicho vector se han construido las matrices 𝑚1, 𝑚2, 𝑚3 𝑦 𝑚4.
 
@@ -206,7 +206,7 @@ outer(a, b)
 
 ```
 
-### **Ejercicio 12** 
+### **Ejercicio 12**
 
 Sean 𝐴 una matriz 2 × 3, 𝐵 una matriz 3 × 4 y 𝐶 una matriz 2 × 3. ¿De qué tipo y dimensión serán los objetos obtenidos de los siguientes comandos de R? ¿Alguno de los comandos produce mensajes de error? ¿Por qué? a) 𝐴 ∗ 𝐵 b) 𝑜𝑢𝑡𝑒𝑟(𝐴, 𝐵) c) 𝐴 + 2 d) 𝐴% ∗ %𝐵 e) exp(𝐵). Nota: exp() es la función exponencial. f) 𝐴 ∗ 𝐶 g) 𝐴% ∗ %C
 
