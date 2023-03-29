@@ -1,0 +1,56 @@
+---
+title: "Ejercicios 14 y 15"
+format: html
+editor: visual
+toc: true
+lang: es
+---
+
+### Ejercicio 14 (Cadena de Markov)
+
+![](images/paste-BFB70441.png){width="637"}
+
+Se solicita efectuar los siguientes cálculos en R.
+
+a\. Crear un vector que represente el estado inicial.
+
+```{r}
+p_0 <- setNames(c(0.40, 0.60), c("Empresa A", "Empresa B"))
+p_0
+```
+
+b\. Crear una matriz que represente las transiciones de un estado a otro.
+
+```{r}
+p <- matrix(c(0.50, 0.50, 0.75, 0.25), nrow = 2, ncol = 2, byrow = TRUE)
+p
+```
+
+c\. Calcular los vectores que representen las situaciones en los momentos t1 (al
+
+finalizar el primer mes), t2, t5 y tn (para éste último generalícelo en R).
+
+```{r}
+p_1 <- p_0 %*% p
+p_1
+p_2 <- p_1 %*% p
+p_2
+
+get_p_t <- function(t, p_0, p) {
+  p_t <- p_0 %*% p
+  for (i in 2:t) {
+    p_t <-  p_t %*% p
+  }
+  return(p_t)
+}
+
+get_p_t(50, p_0, p) 
+```
+
+d\. Verificar con el comando sum() que dichos vectores cumplen con ser vectores de
+
+probabilidad o estocástico y con el comando apply() que la matriz de transición es
+
+estocástica.
+
+e\. Calcular el vector t que representa el estado firme o fijo de la Cadena Markov.

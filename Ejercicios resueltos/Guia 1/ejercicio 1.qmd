@@ -13,7 +13,7 @@ Ingresar los siguientes datos como una matriz de nombre "Datos.Empleados" donde 
 
 ![](images/paste-3E93C6C5.png)
 
-a. Definir un vector con los datos de cada uno de los empleados.
+a.  Definir un vector con los datos de cada uno de los empleados.
 
 ```{r}
 
@@ -39,32 +39,32 @@ datos_empleados
 
 c\. Escriba los comandos adecuado para,
 
- 1. Visualizar en pantalla la cantidad de individuos y variables ingresadas.
+1.  Visualizar en pantalla la cantidad de individuos y variables ingresadas.
 
 ```{r}
 dim(datos_empleados)
 ```
 
-2. Ponerles nombre a las variables 
+2.  Ponerles nombre a las variables 
 
 ```{r}
 colnames(datos_empleados) <- c("Edad", "Sexo", "Sueldo", "Antigüedad")
 datos_empleados
 ```
 
-3. Visualizar en pantalla el Sueldo del individuo n°5 ingresado
+3.  Visualizar en pantalla el Sueldo del individuo n°5 ingresado
 
 ```{r}
 datos_empleados[5, "Sueldo"]
 ```
 
-4. Visualizar en pantalla los datos completos del individuo n° 8
+4.  Visualizar en pantalla los datos completos del individuo n° 8
 
 ```{r}
 datos_empleados[8, ]
 ```
 
-5. Visualizar en pantalla los Sueldos de los hombres.
+5.  Visualizar en pantalla los Sueldos de los hombres.
 
 ```{r}
 datos_empleados[datos_empleados[, "Sexo"] == "M", "Sueldo"]
@@ -73,20 +73,20 @@ library(dplyr)
 as.data.frame(datos_empleados) %>% filter(Sexo == "M") %>% select(Sueldo)
 ```
 
-6. Visualizar en pantalla la Antigüedad de las mujeres.
+6.  Visualizar en pantalla la Antigüedad de las mujeres.
 
 ```{r}
 datos_empleados[datos_empleados[, "Sexo"] == "F", "Antigüedad"]
 ```
 
-7. Visualizar en pantalla el Sueldo de los empleados de más de 50 años.
+7.  Visualizar en pantalla el Sueldo de los empleados de más de 50 años.
 
 ```{r}
 datos_empleados[datos_empleados[, "Edad"] > 50, "Sueldo"]
 
 ```
 
-8. Generar un vector con el valor de la variable (Sueldo/Antigüedad) de cada
+8.  Generar un vector con el valor de la variable (Sueldo/Antigüedad) de cada
 
 individuo.
 
@@ -95,7 +95,7 @@ sueldo_por_antiguedad <- round(as.numeric(datos_empleados[, "Sueldo"]) / as.nume
 sueldo_por_antiguedad
 ```
 
-9. Adicionar el vector generado en h) como una nueva columna de la matriz "Datos.
+9.  Adicionar el vector generado en h) como una nueva columna de la matriz "Datos.
 
 Empleados"
 
