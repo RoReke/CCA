@@ -15,7 +15,7 @@ Se solicita efectuar los siguientes cálculos en R.
 a\. Crear un vector que represente el estado inicial.
 
 ```{r}
-p_0 <- setNames(c(0.40, 0.60), c("Empresa A", "Empresa B"))
+p_0 <- c(0.40, 0.60)
 p_0
 ```
 
@@ -38,13 +38,16 @@ p_2
 
 get_p_t <- function(t, p_0, p) {
   p_t <- p_0 %*% p
-  for (i in 2:t) {
-    p_t <-  p_t %*% p
+  if (t != 1) {
+    for (i in 2:t) {
+      p_t <- p_t %*% p
+    }
   }
+  colnames(p_t) <- c("A", "B")
   return(p_t)
 }
 
-get_p_t(50, p_0, p) 
+get_p_t(5, p_0, p) 
 ```
 
 d\. Verificar con el comando sum() que dichos vectores cumplen con ser vectores de
@@ -53,4 +56,25 @@ probabilidad o estocástico y con el comando apply() que la matriz de transició
 
 estocástica.
 
+```{r}
+sum(p_0)
+apply(p, 1, sum)
+```
+
 e\. Calcular el vector t que representa el estado firme o fijo de la Cadena Markov.
+
+```{r}
+library(ggplot2)
+library(purrr)
+library(dplyr)
+t <- 50
+df <- map_df(.x = 1:t, ~ as.data.frame(get_p_t(.x, p_0, p))) %>% 
+  mutate(estados = 1:t)
+
+ggplot(df, aes(x = estados)) +
+  geom_line(aes(y = A, color = "A")) +
+  geom_line(aes(y = B, color = "B")) +
+  labs(x = "Estados", y = "Share Mercado") +
+  theme_minimal()
+
+```
