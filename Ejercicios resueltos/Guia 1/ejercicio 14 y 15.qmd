@@ -36,7 +36,7 @@ p_1
 p_2 <- p_1 %*% p
 p_2
 
-get_p_t <- function(t, p_0, p) {
+get_estado <- function(t, p_0, p) {
   p_t <- p_0 %*% p
   if (t != 1) {
     for (i in 2:t) {
@@ -47,7 +47,7 @@ get_p_t <- function(t, p_0, p) {
   return(p_t)
 }
 
-get_p_t(5, p_0, p) 
+get_estado(5, p_0, p) 
 ```
 
 d\. Verificar con el comando sum() que dichos vectores cumplen con ser vectores de
@@ -78,3 +78,61 @@ ggplot(df, aes(x = estados)) +
   theme_minimal()
 
 ```
+
+### Ejercicio 15
+
+![](images/paste-21D9515F.png)
+
+a\. Calcular los anteriores vectores de estados considerando que se parte únicamente
+
+de un estado.
+
+```{r}
+P <- matrix(
+  c(0.4, 0.3, 0.2, 0.1, 0.1, 0.1, 0.6, 0.2, 0, 0, 1, 0, 0, 0, 0, 1), 
+  nrow = 4, 
+  byrow = TRUE
+)
+p_0 <- c(1, 0, 0, 0)
+
+get_estado <- function(t, p_0, p) {
+    p_t <- p_0 %*% p
+    if (t != 1) {
+        for (i in 2:t) {
+            p_t <- p_t %*% p
+        }
+    }
+    return(p_t)
+}
+
+get_estado(t = 20, p_0, P)
+```
+
+b\. Verificar con el comando sum() que dichos vectores cumplen con ser vectores de
+
+probabilidad o estocásticos y con el comando apply() que la matriz de transición
+
+es estocástica.
+
+```{r}
+a <- get_estado(t = 20, p_0, P)
+sum(a)
+apply(P, 1, FUN = sum)
+```
+
+c\. Calcular la matriz Q = (I − H)−1
+
+```{r}
+H <- matrix(c(0.4, 0.3, 0.1, 0.1), nrow = 2, byrow = TRUE)
+Q <- solve(diag(2) - H)
+Q
+```
+
+d. Calcular la matriz 𝑅 = 𝑄 ∗ 𝐺
+
+```{r}
+G <- matrix(c(0.2, 0.1, 0.6, 0.2), nrow = 2, byrow = TRUE)
+Q %*% G
+```
+
+![](images/paste-C4EA5B09.png){width="577"}
