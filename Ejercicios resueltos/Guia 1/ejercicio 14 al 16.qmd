@@ -132,7 +132,20 @@ d. Calcular la matriz 𝑅 = 𝑄 ∗ 𝐺
 
 ```{r}
 G <- matrix(c(0.2, 0.1, 0.6, 0.2), nrow = 2, byrow = TRUE)
-Q %*% G
+R <- Q %*% G
+R
 ```
 
 ![](images/paste-C4EA5B09.png){width="577"}
+
+### Ejercicio 16
+
+Crear una función que simplemente devuelva el área de un rectángulo tomando como
+
+argumentos, su base y su altura.
+
+```{r}
+area_rectangulo <- function(base, altura) {
+  base * altura
+}
+```
