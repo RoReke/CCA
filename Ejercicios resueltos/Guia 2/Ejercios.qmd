@@ -1,0 +1,82 @@
+---
+title: "Ejercicios 14 y 15"
+format: html
+editor: visual
+toc: true
+lang: es
+---
+
+### Ejercicio 1
+
+Se responde al azar un examen diagnóstico de 10 preguntas, donde en cada una de ellas
+
+se plantean 4 posibilidades siendo sólo una de ellas correcta.
+
+Si se responden todas las preguntas y las respuestas correctas suman un punto mientras
+
+que las contestadas incorrectamente restan un cuarto de punto, se pide,
+
+a\) Identificar la variable aleatoria asociada.
+
+```{r}
+# Es una distribución binomial con variable aleatoria "Número de respuestas correctas"
+# Pero para hacer el calculo general necesito estudiar la variable aleatoria "puntaje total" siendo esta: X = k - (1/4) * (10 - k) donde k es el numero de rtas correctas. 
+```
+
+b\) Gráficos de la Función de Probabilidad y Distribución y coméntelas.
+
+```{r}
+library(ggplot2)
+n <- 10
+p <- 1/4
+k_values <- 0:n
+binom_probs <- dbinom(k_values, size = n, prob = p)
+binom_data <- data.frame(k_values, binom_probs)
+ggplot(binom_data, aes(x = k_values, y = binom_probs)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Función de densidad Binomial",
+       x = "Número de respuestas correctas (k)",
+       y = "Probabilidad")
+
+binom_cdf <- pbinom(k_values, size = n, prob = p)
+binom_cdf_data <- data.frame(k_values, binom_cdf)
+ggplot(binom_cdf_data, aes(x = k_values, y = binom_cdf)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Función de Distribución Binomial",
+       x = "Número de respuestas correctas (k)",
+       y = "Probabilidad acumulada")
+```
+
+c\) La probabilidad de obtener 3 aciertos.
+
+```{r}
+dbinom(3, size = n, prob = p)
+```
+
+d\) La probabilidad de aprobar.
+
+```{r}
+# asumo que se aprueba con 4
+# para aprobar necesito tener 4 puntos en total 
+# resuelvo esta ecuación 4 = k - (1/4) * (10 - k) => necesito 6 resp correctas aprox
+pbinom(6, size = n, prob = p, lower.tail = FALSE)
+```
+
+e\) ¿Qué número de aciertos es más probable?
+
+```{r}
+library(dplyr)
+data <- data.frame(aciertos = 1:10, prob = dbinom(1:10, size = n, prob = p))
+data %>% filter(prob == max(prob))
+```
+
+f\) ¿Cuántos aciertos debe tener para quedar por encima de la mitad de la clase?
+
+```{r}
+qbinom(p = 0.5, size = 10, prob = p)
+
+```
+
+g\) ¿Y por encima de un tercio de la clase?

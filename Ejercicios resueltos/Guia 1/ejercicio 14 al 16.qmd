@@ -149,3 +149,22 @@ area_rectangulo <- function(base, altura) {
   base * altura
 }
 ```
+
+```{r}
+library(ggplot2)
+base <- 5
+altura <- 3
+area <- area_rectangulo(base, altura)
+rectangulo_df <- data.frame(
+  x = c(0, base, base, 0, 0),
+  y = c(0, 0, altura, altura, 0)
+)
+ggplot(rectangulo_df, aes(x = x, y = y)) +
+  geom_polygon(fill = "blue", alpha = 0.4) +
+  geom_path(color = "black", linewidth = 1) +
+  ggtitle(paste("Área sombreada del rectángulo:", area)) +
+  xlab("Base") +
+  ylab("Altura") +
+  coord_fixed() +
+  theme_minimal()
+```
