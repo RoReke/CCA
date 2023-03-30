@@ -128,7 +128,7 @@ Q <- solve(diag(2) - H)
 Q
 ```
 
-d. Calcular la matriz 𝑅 = 𝑄 ∗ 𝐺
+d.  Calcular la matriz 𝑅 = 𝑄 ∗ 𝐺
 
 ```{r}
 G <- matrix(c(0.2, 0.1, 0.6, 0.2), nrow = 2, byrow = TRUE)

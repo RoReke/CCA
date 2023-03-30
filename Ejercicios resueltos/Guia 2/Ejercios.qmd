@@ -75,8 +75,163 @@ data %>% filter(prob == max(prob))
 f\) ¿Cuántos aciertos debe tener para quedar por encima de la mitad de la clase?
 
 ```{r}
-qbinom(p = 0.5, size = 10, prob = p)
+library(dplyr)
+library(ggplot2)
+prob = 0.25
 
+plot_function_densidad <- function(quantil) {
+  quantil_r <- qbinom(p = quantil, size = 10, prob = prob)
+valores_x <- 0:10
+densidad_probabilidad <- dbinom(valores_x,  size = 10, prob = prob)
+df <- data.frame(valores_x, densidad_probabilidad)
+df_fill <- df %>%
+  filter(valores_x <= quantil_r)
+ggplot() +
+  geom_line(data = df, aes(x = valores_x, y = densidad_probabilidad), color = "blue") +
+  geom_area(data = df_fill, aes(x = valores_x, y = densidad_probabilidad), fill = "blue", alpha = 0.3) +
+  geom_vline(aes(xintercept = quantil_r), color = "red", linetype = "dashed") +
+  labs(
+    title = "Función de Densidad de Probabilidad Normal",
+    x = "Valor en x",
+    y = "Densidad de Probabilidad"
+  ) +
+  theme_minimal()
+}
+plot_function_densidad(0.5)
 ```
 
 g\) ¿Y por encima de un tercio de la clase?
+
+```{r}
+qbinom(p = 1/3, size = 10, prob = 0.25)
+```
+
+### Ejercicio 2
+
+Dada la distribución 𝐵(10; 0.4), calcule las siguientes probabilidades, a) 𝑃\[𝑋 ≤ 8\] b) 𝑃\[2 \< 𝑋 ≤ 5\] c) 𝑃\[𝑋 ≥ 7\]
+
+```{r}
+pbinom(8, 10, 0.4)
+pbinom(5, 10, 0.4) - pbinom(2, 10, 0.4)
+pbinom(7, 10, 0.4, lower.tail = FALSE)
+```
+
+### Ejercicio 3
+
+Un conocido fumador gorrón ha explotado tanto a sus compañeros que en promedio cada uno de ellos le da un cigarrillo de cada diez veces que éste les pide.
+
+a\) ¿Cuál es la probabilidad de que consiga 1 cigarrillo en menos de 5 intentos?
+
+```{r}
+1 - pbinom(0, 4, 0.1) # al menos 1 cigarrillo. 
+```
+
+b\) Si pretende hacer acopio de cigarrillos para el fin de semana, ¿Cuántas veces, en promedio, tendrá que pedir tabaco para conseguir 20 unidades?
+
+```{r}
+20/0.1
+```
+
+### Ejercicio 4
+
+Suponga que en los concursos docentes es frecuente que se realice un sorteo público extrayendo una serie de temas de un bolillero. Asimismo, imagínese que un concursante preparó 60 temas entre 100, de los que se seleccionan al azar dos temas. Se pide,
+
+a\) Identificar la variable aleatoria asociada.
+
+```{r}
+# cantidad de temas
+```
+
+b\) Gráficos de la Función de Probabilidad y Distribución y coméntelas.
+
+c\) La probabilidad de que le salga uno de los temas que lleva preparado.
+
+```{r}
+n <- 100   # número de elementos en la población
+m <- 60    # número de elementos en la población que tienen la característica de interés
+k <- 2     # número de elementos que se extraen de la población
+# Calculamos la probabilidad de que se elija al menos uno de los temas que preparó
+1 - phyper(0, m, n-m, k)
+```
+
+d\) La probabilidad de que le salgan dos de los temas que lleva preparado.
+
+```{r}
+phyper(1, m, n-m, k, lower.tail = FALSE)
+```
+
+e\) ¿Qué ocurre con la probabilidad anterior si aumenta el número de temas preparados a 80?
+
+```{r}
+phyper(1, 80, n-80, k, lower.tail = FALSE)
+```
+
+### Ejercicio 5
+
+En un establecimiento de apuestas deportivas llega en promedio 1 cliente cada 3 minutos.
+
+a\) ¿Cuál es la probabilidad de que en un periodo de 5 minutos lleguen más de 5
+
+clientes?
+
+```{r}
+#λ = (1 cliente / 3 minutos) * 5 minutos = 5/3 ≈ 1.67 clientes en 5 minutos
+1 - ppois(5, lambda = 1.67)
+```
+
+b\) ¿Cuál es la cantidad más probable de llegadas en media hora?
+
+```{r}
+#λ = (1 cliente / 3 minutos) * 30 minutos = 30/3 ≈ 10 clientes en 30 minutos
+```
+
+### Ejercicio 6
+
+Las compañías aéreas acostumbran a reservar más plazas de las existentes en sus
+
+vuelos, dado el porcentaje de anulaciones que se produce. Si el porcentaje promedio de
+
+anulaciones es del 5%.
+
+¿Cuántas reservas deberá hacer una compañía para un vuelo con 200 plazas, si quiere
+
+con una probabilidad del 97 % que todos sus clientes tengan cabida en dicho vuelo?
+
+```{r}
+library(ggplot2)
+
+reservas <- 200:220
+valores_qbinom <- qbinom(0.97, size = reservas, 0.95, lower.tail = FALSE)
+data <- data.frame(Reservas = reservas, Qbinom = valores_qbinom)
+interseccion <- data[data$Qbinom >= 200,][1,]
+
+ggplot(data, aes(x = Reservas, y = Qbinom)) +
+  geom_point() +
+  geom_point(data = interseccion, aes(x = Reservas, y = Qbinom), color = "green", size = 4, shape = 21) +
+  geom_hline(yintercept = 200, linetype = "dashed", color = "red") +
+  annotate("text", x = interseccion$Reservas, y = interseccion$Qbinom, label = paste("Intersección =", interseccion$Reservas), vjust = -1.5, color = "darkgreen") +
+  theme_minimal() +
+  labs(title = "Valores de qbinom en función del tamaño de reserva",
+       x = "Tamaño de reserva",
+       y = "Valores de qbinom") +
+  coord_cartesian(ylim = c(190, max(valores_qbinom) + 10))
+
+```
+
+### Ejercicio 7
+
+El servicio de reclamos de una asociación de consumidores recibe en promedio 3 quejas
+
+por hora.
+
+a\) Calcule la probabilidad de que en 1 hora no reciba ningún reclamo.
+
+```{r}
+dpois(0, 3)
+```
+
+b\) Calcule la probabilidad de que en 2 horas reciba entre 2 y 6 reclamos.
+
+```{r}
+ppois(6, 6) - ppois(1, 6)
+```
