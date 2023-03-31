@@ -714,7 +714,7 @@ lanzamientos <- 10
 rbinom(lanzamientos, 1, p)
 ```
 
-### Ejercicio 29 (!)
+### Ejercicio 29 
 
 El archivo "Departamentos.txt" corresponde a un ejemplo hipotético de valores de venta en miles de dólares de departamentos de 2 3 y 4 dormitorios de departamentos en dos zonas A y D. a) Lea el archivo de datos b) Compruebe con el editor que las variables son de tipo numérica c) Para cada variable calcule el valor mínimo, máximo, media, cuartiles, rango, desvío estándar, IQR, MAD y coeficiente de variación. d) Arme una lista para informar los resultados obtenidos en 3. e) Realice un diagrama de tallo hoja para cada variable. f) Realice y visualice en la misma ventana gráfica un histograma para cada variable. g) Para los precios de los departamentos de 2 dormitorios de las zonas A y D realice un histograma en la misma escala y visualice en la misma ventana gráfica. h) Realice boxplots "en paralelo" para las 4 variables. i) ¿Qué puede describir a partir del análisis realizado?
 
@@ -756,7 +756,7 @@ El archivo "\^GSPC.csv" corresponde a la información del Índice S&P 500 desde 
 a\) Lea el archivo de datos
 
 ```{r}
-#data <- read.csv2("data/GSPC.csv", sep = ",")
+#data <- read.csv2("data/GSPC.csv", sep = ",", dec = ".")
 ```
 
 b\) Compruebe con el editor si las variables son de tipo numérica, carácter, lógico, etc.
@@ -768,33 +768,28 @@ str(data)
 c\) Para cada variable calcule el valor mínimo, máximo, media, cuartiles, rango, desvío estándar, IQR, MAD y coeficiente de variación (excluya el campo "Date").
 
 ```{r}
-# Cálculo de estadísticas descriptivas para cada variable
+# Carga las bibliotecas necesarias
 library(dplyr)
 library(stats)
 library(purrr)
+#data <- data %>% select(-Date)
+get_stats <- function(x) {
+  c(min = min(x),
+    max = max(x),
+    mean = mean(x),
+    q1 = quantile(x, probs = 0.25),
+    median = median(x),
+    q3 = quantile(x, probs = 0.75),
+    range = max(x) - min(x),
+    sd = sd(x),
+    iqr = IQR(x),
+    mad = mad(x),
+    cv = sd(x) / mean(x))
+}
 
-# Calcula las estadísticas descriptivas
-stats_data <- data %>%
-  summarize(
-    min = apply(., min),
-    max = apply(., max),
-    mean = apply(., 2, mean),
-   # q1 = apply(., 2, quantile, 0.25),
-    median = apply(., 2, median),
-    q3 = apply(., 2, quantile, 0.75),
-    range = apply(., 2, range),
-    sd = apply(., 2, sd),
-    iqr = apply(., 2, IQR),
-    mad = apply(., 2, mad),
-    cv = apply(., 2, function(x) sd(x) / mean(x))
-  )
-
-# Agrega los nombres de las columnas
-colnames(stats_data) <- c("min", "max", "mean", "q1", "median", "q3", "range", "sd", "iqr", "mad", "cv")
-
-# Muestra las estadísticas descriptivas
-stats_data
-
+stats <- data %>% map_dfr(~ get_stats(.)) %>% as.data.frame()
+rownames(stats) <- colnames(data)
+stats
 ```
 
 d\) Arme una lista para informar los resultados obtenidos en 3.
