@@ -235,3 +235,215 @@ b\) Calcule la probabilidad de que en 2 horas reciba entre 2 y 6 reclamos.
 ```{r}
 ppois(6, 6) - ppois(1, 6)
 ```
+
+### Ejercicio 8
+
+En una pecera hay 10 peces machos y 8 hembras, si se extraen aleatoriamente 5 peces, calcule la probabilidad de que 3 sean machos y 2 hembras.
+
+```{r}
+# x es el número de elementos de interés que se extraen (en este caso, 3 machos y 2 hembras).
+# m es el número de elementos de interés en la población (en este caso, el número de machos, que es 10).
+# n es el número de elementos que no son de interés en la población (en este caso, el número de hembras, que es 8).
+# k es el número de elementos que se extraen (en este caso, 5).
+dhyper(x = 3, m = 10, n = 8, k = 5)
+```
+
+### Ejercicio 9
+
+Un jugador apuesta \$5 por tirada a un número de los 37 que componen la ruleta, si acierta, gana \$180. Calcular los beneficios esperados al cabo de 100 jugadas.
+
+```{r}
+# Probabilidades
+prob_ganar <- 1/37
+prob_perder <- 36/37
+
+# Ganancias y pérdidas
+ganancia <- 175
+perdida <- -5
+
+# Beneficio esperado por tirada
+beneficio_esperado_tirada <- (prob_ganar * ganancia) + (prob_perder * perdida)
+
+# Beneficio esperado después de 100 jugadas
+beneficio_esperado_100 <- beneficio_esperado_tirada * 100
+beneficio_esperado_100
+
+```
+
+### Ejercicio 10
+
+El servicio de micros entre Retiro y la Ciudad de la Plata tiene salidas cada media hora entre las 6 am y las 12 pm. Una persona se olvidó el reloj en su casa, llega a la estación de Retiro. Se pide,
+
+a\) La variable aleatoria adecuada para esta situación.
+
+```{r}
+#el tiempo de espera en minutos hasta la próxima salida del micro
+```
+
+Gráficos de la Función de Densidad y Distribución y coméntelas.
+
+```{r}
+# Función de densidad
+x <- seq(0, 30, length=1000) # Valores de x en el rango [0, 360]
+y <- dunif(x, min=0, max=360) # Función de densidad uniforme
+plot(x, y, type="l", xlab="Tiempo de espera (minutos)", ylab="Densidad de probabilidad")
+
+# Función de distribución acumulada
+z <- punif(x, min=0, max=30) # Función de distribución uniforme
+plot(x, z, type="l", xlab="Tiempo de espera (minutos)", ylab="Probabilidad acumulada")
+
+```
+
+c)  ¿Cuál es su media? ¿y su mediana? ¿y su moda?
+
+```{r}
+#  30 minutos
+```
+
+d)  La probabilidad de que espere menos de 10 minutos.
+
+```{r}
+punif(10, min = 0, max = 30)
+```
+
+e)  La probabilidad de que espere más de 15 minutos, pero menos de 20.
+
+```{r}
+punif(20, min = 0, max = 30) - punif(15, min = 0, max = 30)
+```
+
+f)  ¿Cuál es la probabilidad de que espere exactamente 11 minutos y medio
+
+```{r}
+dunif(11.5, min = 0, max = 30)
+```
+
+### Ejercicio 11
+
+Se sabe que las bombillas de bajo consumo de 14 w tienen una vida útil media de 10000 horas, mientras que las bombillas clásicas por incandescencia de 60 w tienen una vida útil media de 1000 horas. Si cada día se encienden unas 4 horas, en esta situación a) Defina la variable aleatoria asociada.
+
+```{r}
+# vida útil en horas de las bombillas.
+```
+
+b)  Obtenga los gráficos de la Función de Densidad y Distribución y coméntelas.
+
+```{r}
+# Datos de vida útil de las bombillas
+vida_util_ahorro_energia <- c(800, 1200, 1100, 900, 1500, 1000, 1300, 850, 950, 1000)
+vida_util_incandescente <- c(400, 300, 200, 500, 350, 600, 250, 400, 450, 300)
+
+# Función de densidad de probabilidad exponencial
+pdf_exponencial <- function(x, lambda) {
+  return(lambda * exp(-lambda * x))
+}
+
+# Función de distribución de probabilidad exponencial
+cdf_exponencial <- function(x, lambda) {
+  return(1 - exp(-lambda * x))
+}
+
+# Parámetro lambda para la distribución exponencial
+lambda_ahorro_energia <- 1/mean(vida_util_ahorro_energia)
+lambda_incandescente <- 1/mean(vida_util_incandescente)
+
+# Rango de valores para la función de densidad y distribución
+rango <- seq(0, 2000, length.out = 500)
+
+# Gráfico de la función de densidad de probabilidad exponencial para las bombillas de ahorro de energía
+plot(rango, pdf_exponencial(rango, lambda_ahorro_energia), type = "l", col = "blue",
+     main = "Función de densidad de probabilidad exponencial", xlab = "Vida útil (horas)", ylab = "Densidad de probabilidad")
+lines(rango, pdf_exponencial(rango, lambda_incandescente), col = "red")
+legend("topright", legend = c("Ahorro de energía", "Incandescente"), col = c("blue", "red"), lty = 1)
+
+# Gráfico de la función de distribución de probabilidad exponencial para las bombillas de ahorro de energía
+plot(rango, cdf_exponencial(rango, lambda_ahorro_energia), type = "l", col = "blue",
+     main = "Función de distribución de probabilidad exponencial", xlab = "Vida útil (horas)", ylab = "Probabilidad acumulada")
+lines(rango, cdf_exponencial(rango, lambda_incandescente), col = "red")
+legend("bottomright", legend = c("Ahorro de energía", "Incandescente"), col = c("blue", "red"), lty = 1)
+
+```
+
+c)  ¿Cuál es su media? ¿y su mediana?
+
+```{r}
+lambda_bajo_consumo <- 1/10000
+lambda_incandescencia <- 1/1000
+media_bajo_consumo <- 1/lambda_bajo_consumo
+media_incandescencia <- 1/lambda_incandescencia
+mediana_bajo_consumo <- log(2)/lambda_bajo_consumo
+mediana_incandescencia <- log(2)/lambda_incandescencia
+```
+
+d)  ¿Cuál es la probabilidad de que después de un año estén funcionando?.
+
+```{r}
+anio <- 365*4 #1460 horas
+1 - pexp(anio, lambda_bajo_consumo)
+1 - pexp(anio, lambda_incandescencia)
+```
+
+\### Ejercicio 12
+
+Durante la Segunda Guerra Mundial los alemanes bombardearon repetidas veces Londres. Los expertos demostraron que se trataba de bombardeos indiscriminados y que caían en cada acción y en promedio 2 bombas por cada cuadrícula de 100 metros de lado. En vista a lo anterior, calcule la probabilidad de que en una cierta cuadrícula de 50 metros de lado no haya caído ninguna bomba durante un bombardeo
+
+```{r}
+#Para resolver este problema, podemos utilizar la distribución de Poisson, que es #adecuada para modelar eventos que ocurren de manera aleatoria e independiente en #un espacio fijo. 
+#
+lambda <- 0.5 # bombas
+dpois(0, lambda)
+
+```
+
+### Ejercicio 13
+
+Dada una Distribución Normal de Mediana igual a 3 y una varianza igual a 9, calcule las siguientes probabilidades, a) 𝑃\[2 ≤ 𝑋 ≤ 5\] b) 𝑃\[𝑋 ≥ 3\] c) 𝑃\[𝑋 ≤ −2\]\
+
+```{r}
+media <- 3
+desviacion_estandar <- 3
+probabilidad_a <- pnorm(5, mean = media, sd = desviacion_estandar) - pnorm(2, mean = media, sd = desviacion_estandar)
+probabilidad_a
+probabilidad_b <- 1 - pnorm(3, mean = media, sd = desviacion_estandar)
+probabilidad_b
+probabilidad_c <- pnorm(-2, mean = media, sd = desviacion_estandar)
+probabilidad_c
+```
+
+### Ejercicio 14
+
+Un programa de televisión que premia aquellos participantes que llaman dando la respuesta correcta de un concurso, atiende 1 de cada 10 llamadas que se realizan.
+
+a\) ¿Qué número promedio de llamadas se tendrán que realizar para ser atendido?
+
+```{r}
+p <- 0.1  # Probabilidad de éxito
+1/p
+```
+
+b\) ¿Cuál es la probabilidad de ser atendido a la primera?
+
+```{r}
+k <- 1   # Número de éxitos que nos interesa calcular
+dbinom(k, size = 1, prob = p)
+```
+
+\### Ejercicio 15
+
+Calcule en los siguientes casos el valor de 𝑎, sabiendo que 𝑋\~𝑁(1,5).
+a) 𝑃\[0 ≤ 𝑋 ≤ 𝑎\] = 0,28
+b) 𝑃\[1 − 𝑎 ≤ 𝑋 ≤ 1 + 𝑎\] = 0,65
+
+```{r}
+media <- 1
+desv <- sqrt(5)
+prob <- 0.28
+x = 1
+z = 0
+while(0.28 - z > 0.01) {
+  x <- x + 0.01
+  z <- pnorm(x, mean = media, sd = desv) - pnorm(0, mean = media, sd = desv)
+}
+x
+pnorm(1 + x, mean = media, sd = desv) - pnorm(1 - x, mean = media, sd = desv)
+```
