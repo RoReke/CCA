@@ -430,9 +430,7 @@ dbinom(k, size = 1, prob = p)
 
 \### Ejercicio 15
 
-Calcule en los siguientes casos el valor de 𝑎, sabiendo que 𝑋\~𝑁(1,5).
-a) 𝑃\[0 ≤ 𝑋 ≤ 𝑎\] = 0,28
-b) 𝑃\[1 − 𝑎 ≤ 𝑋 ≤ 1 + 𝑎\] = 0,65
+Calcule en los siguientes casos el valor de 𝑎, sabiendo que 𝑋\~𝑁(1,5). a) 𝑃\[0 ≤ 𝑋 ≤ 𝑎\] = 0,28 b) 𝑃\[1 − 𝑎 ≤ 𝑋 ≤ 1 + 𝑎\] = 0,65
 
 ```{r}
 media <- 1
@@ -447,3 +445,175 @@ while(0.28 - z > 0.01) {
 x
 pnorm(1 + x, mean = media, sd = desv) - pnorm(1 - x, mean = media, sd = desv)
 ```
+
+### Ejercicio 16
+
+Se sabe que la alarma de un reloj saltará en cualquier momento entre las siete y las ocho de la mañana. Si el propietario del reloj se despierta al oír dicha alarma y necesita, como mínimo, veinticinco minutos para arreglarse y llegar al trabajo, a) ¿Cuál es la probabilidad de que llegue antes de las ocho?
+
+```{r}
+probabilidad <- (60 - 25)/60
+probabilidad
+```
+
+b)  Si el dueño del reloj sigue programando el reloj de la misma manera durante 10 días, calcule el número más probable de días en que llegará después de las ocho.
+
+```{r}
+10*probabilidad
+```
+
+### Ejercicio 17
+
+De una tribu indígena se sabe que los hombres tienen una estatura que se distribuye normalmente con un valor esperado igual a 1,70 y desviación típica 𝜎. Si a través de estudios realizados se conoce que la probabilidad de que su estatura sea mayor a 1,80 es 0,12.
+
+Calcule la probabilidad de que un individuo elegido al azar mida entre 1,65 y 1,75.
+
+```{r}
+media <- 1.70
+x <- 1.80
+#z <- (x - media) / sigma
+# el valor correspondiente al percentil (1 - 0,12), que es el valor de la variable normal estándar que tiene una probabilidad acumulada del 88%:
+
+z <- qnorm(1 - 0.12)
+sigma <- (x - media) / z
+x1 <- 1.65
+x2 <- 1.75
+z1 <- (x1 - media) / sigma
+z2 <- (x2 - media) / sigma
+
+p <- pnorm(z2) - pnorm(z1)
+p
+```
+
+### Ejercicio 18 (!)
+
+Calcule la probabilidad de obtener más de 200 seises en 1200 lanzamientos de un dado no trucado.
+
+```{r}
+n <- 1200
+p <- 1/6
+1 - pbinom(200, n, p)
+
+simular_lanzamientos <- function(n_lanzamientos) {
+  dados <- sample(1:6, n_lanzamientos, replace = TRUE)
+  sum(dados == 6)
+}
+set.seed(123)
+n_simulaciones <- 10000
+n_lanzamientos <- 1200
+
+resultados <- replicate(n_simulaciones, simular_lanzamientos(n_lanzamientos))
+
+proporcion_mayor_200 <- mean(resultados > 200)
+proporcion_mayor_200
+```
+
+### Ejercicio 19
+
+Genere muestras de tamaño 10, 100, 500 y 1000 de una población que sigue una Distribución Normal con valor modal de 3,5 y desvío estándar igual a 2. Estudie el comportamiento de la media y el desvío estándar en las cuatro muestras
+
+```{r}
+set.seed(123)  # fijar la semilla para replicabilidad
+
+mu <- 3.5
+sigma <- 2
+
+muestra_10 <- rnorm(10, mu, sigma)
+muestra_100 <- rnorm(100, mu, sigma)
+muestra_500 <- rnorm(500, mu, sigma)
+muestra_1000 <- rnorm(1000, mu, sigma)
+media_10 <- mean(muestra_10)
+media_100 <- mean(muestra_100)
+media_500 <- mean(muestra_500)
+media_1000 <- mean(muestra_1000)
+
+desvio_10 <- sd(muestra_10)
+desvio_100 <- sd(muestra_100)
+desvio_500 <- sd(muestra_500)
+desvio_1000 <- sd(muestra_1000)
+```
+
+### Ejercicio 20
+
+Obtenga una muestra aleatoria de tamaño 50 para una característica poblacional que sigue una Distribución Binomial de parámetros 𝑛 = 12 y 𝑝 = 0,70. Calcule su valor esperado y desvío estándar comparándolas con los respectivos valores poblacionales. Además, represente los datos mediante un diagrama de barras y compare los resultados con los observados en la gráfica de la función de probabilidad de la Distribución Binomial. ¿Qué ocurre si se aumenta el tamaño de la muestra a 500?
+
+```{r}
+
+set.seed(123)  # fijar la semilla para replicabilidad
+
+n <- 12
+p <- 0.7
+
+muestra_50 <- rbinom(50, n, p)
+muestra_500 <- rbinom(500, n, p)
+media_muestra_50 <- mean(muestra_50)
+desvio_muestra_50 <- sqrt(mean((muestra_50 - media_muestra_50)^2))
+media_poblacional <- n * p
+desvio_poblacional <- sqrt(n * p * (1 - p))
+media_muestra_500 <- mean(muestra_500)
+desvio_muestra_500 <- sqrt(mean((muestra_500 - media_muestra_500)^2))
+media_muestra_500
+media_muestra_50
+media_poblacional
+library(ggplot2)
+
+datos <- rbind(data.frame(Muestra = "Muestra 50", Valor = muestra_50),
+               data.frame(Muestra = "Muestra 500", Valor = muestra_500))
+
+ggplot(datos, aes(x = Valor, fill = Muestra)) +
+  geom_histogram(position = "dodge", bins = 10, alpha = 0.5) +
+  ggtitle("Comparación de las muestras") +
+  xlab("Valor") +
+  ylab("Frecuencia") +
+  scale_fill_manual(values = c("blue", "red")) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+### Ejercicio 21
+
+Un liquidador de siniestros revisa las pólizas de seguros de automóviles y sabe que solamente el 12% de las pólizas no sufrieron siniestros.
+
+a\) Calcular la probabilidad de que tenga que revisar 18 pólizas para encontrar 3 que no tengan siniestros.
+
+```{r}
+n <- 18
+p <- 0.12
+x <- 3
+
+probabilidad <- dbinom(x, n, p)
+probabilidad
+```
+
+b\) Calcular la probabilidad de que tenga que revisar 7 pólizas para encontrar una que no sufrido siniestro.
+
+```{r}
+n <- 7
+p <- 0.12
+x <- 1
+
+probabilidad <- dbinom(x, n, p)
+probabilidad
+```
+
+c) ¿Cuántas pólizas espera tener que revisar para encontrar 24 que no tengan
+siniestro?
+
+```{r}
+24/p
+```
+
+d) ¿Cuántas pólizas espera tener que revisar para encontrar 22 que tengan siniestro?
+
+```{r}
+22/(1-p)
+```
+
+### Ejercicio 22
+
+El 80% de los clientes de una Entidad Financiera deben recurrir a sobregiros al menos
+una vez al año. Si se seleccionan aleatoriamente 100 cuentas corrientes, hallar la
+probabilidad de que hayan recurrido a sobregiros:
+a) Entre 10 y 15
+b) Más de 8
+c) Menos de 8
+
