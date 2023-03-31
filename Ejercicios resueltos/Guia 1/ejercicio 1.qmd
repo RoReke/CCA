@@ -66,6 +66,8 @@ datos_empleados[8, ]
 
 5.  Visualizar en pantalla los Sueldos de los hombres.
 
+    ### (!)
+
 ```{r}
 datos_empleados[datos_empleados[, "Sexo"] == "M", "Sueldo"]
 

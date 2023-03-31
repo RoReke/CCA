@@ -79,7 +79,7 @@ ggplot(df, aes(x = estados)) +
 
 ```
 
-### Ejercicio 15
+### Ejercicio 15 
 
 ![](images/paste-21D9515F.png)
 
@@ -138,7 +138,7 @@ R
 
 ![](images/paste-C4EA5B09.png){width="577"}
 
-### Ejercicio 16
+### Ejercicio 16 (!)
 
 Crear una función que simplemente devuelva el área de un rectángulo tomando como
 
