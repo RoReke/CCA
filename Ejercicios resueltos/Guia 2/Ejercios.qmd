@@ -678,11 +678,7 @@ prob_e
 
 ### Ejercicio 26
 
-Una regla de oro establece que el 5% de una variable normal se encuentra fuera de un
-intervalo aproximadamente ±2𝜎 respecto al valor esperado. ¿En qué medida es cierto?
-a) ¿Dónde están los límites correspondientes al 1%, 0,5% y 0,1%?
-b) ¿Cuál es la posición de los cuartiles expresados en términos de unidades de
-desvío estándar?
+Una regla de oro establece que el 5% de una variable normal se encuentra fuera de un intervalo aproximadamente ±2𝜎 respecto al valor esperado. ¿En qué medida es cierto? a) ¿Dónde están los límites correspondientes al 1%, 0,5% y 0,1%? b) ¿Cuál es la posición de los cuartiles expresados en términos de unidades de desvío estándar?
 
 ```{r}
 # Límites correspondientes al 1%, 0.5% y 0.1%.
@@ -700,10 +696,7 @@ qnorm(0.75)
 
 ### Ejercicio 27
 
-Para una enfermedad conocida por tener una frecuencia de 20% de complicaciones
-postoperatorias. Ahora bien, un incremento de la misma sugiere un nuevo procedimiento,
-lo contrasta en 10 pacientes y no hay complicaciones.
-¿Cuál es la probabilidad de operar 10 pacientes con éxito con el método tradicional?
+Para una enfermedad conocida por tener una frecuencia de 20% de complicaciones postoperatorias. Ahora bien, un incremento de la misma sugiere un nuevo procedimiento, lo contrasta en 10 pacientes y no hay complicaciones. ¿Cuál es la probabilidad de operar 10 pacientes con éxito con el método tradicional?
 
 ```{r}
 p = 0.8
@@ -713,8 +706,7 @@ dbinom(10, 10, p)
 
 Ejercicio 28
 
-La simulación del lanzamiento de monedas se puede realizar con el comando \"rbinom\" en
-vez de \"sample\". ¿Cómo podrías realizarlo?
+La simulación del lanzamiento de monedas se puede realizar con el comando "rbinom" en vez de "sample". ¿Cómo podrías realizarlo?
 
 ```{r}
 p <- 0.5 # Probabilidad de éxito (cara o cruz)
@@ -724,20 +716,7 @@ rbinom(lanzamientos, 1, p)
 
 ### Ejercicio 29 (!)
 
-El archivo \"Departamentos.txt\" corresponde a un ejemplo hipotético de valores de venta
-en miles de dólares de departamentos de 2 3 y 4 dormitorios de departamentos en dos
-zonas A y D.
-a) Lea el archivo de datos
-b) Compruebe con el editor que las variables son de tipo numérica
-c) Para cada variable calcule el valor mínimo, máximo, media, cuartiles, rango,
-desvío estándar, IQR, MAD y coeficiente de variación.
-d) Arme una lista para informar los resultados obtenidos en 3.
-e) Realice un diagrama de tallo hoja para cada variable.
-f) Realice y visualice en la misma ventana gráfica un histograma para cada variable.
-g) Para los precios de los departamentos de 2 dormitorios de las zonas A y D realice
-un histograma en la misma escala y visualice en la misma ventana gráfica.
-h) Realice boxplots \"en paralelo\" para las 4 variables.
-i) ¿Qué puede describir a partir del análisis realizado?
+El archivo "Departamentos.txt" corresponde a un ejemplo hipotético de valores de venta en miles de dólares de departamentos de 2 3 y 4 dormitorios de departamentos en dos zonas A y D. a) Lea el archivo de datos b) Compruebe con el editor que las variables son de tipo numérica c) Para cada variable calcule el valor mínimo, máximo, media, cuartiles, rango, desvío estándar, IQR, MAD y coeficiente de variación. d) Arme una lista para informar los resultados obtenidos en 3. e) Realice un diagrama de tallo hoja para cada variable. f) Realice y visualice en la misma ventana gráfica un histograma para cada variable. g) Para los precios de los departamentos de 2 dormitorios de las zonas A y D realice un histograma en la misma escala y visualice en la misma ventana gráfica. h) Realice boxplots "en paralelo" para las 4 variables. i) ¿Qué puede describir a partir del análisis realizado?
 
 ```{r}
 
@@ -767,4 +746,63 @@ hist(iris$Sepal.Length, main = "Longitud del sépalo")
 hist(iris$Sepal.Width, main = "Ancho del sépalo")
 hist(iris$Petal.Length, main = "Longitud del pétalo")
 hist(iris$Petal.Width, main = "Ancho del pétalo")
+
 ```
+
+### Ejercicio 30
+
+El archivo "\^GSPC.csv" corresponde a la información del Índice S&P 500 desde el primer día hábil de 2000 al 20 de Junio de 2017 inclusive. Contiene los siguientes campos: Date, Open, High, Low, Close, Adj Close y Volume.
+
+a\) Lea el archivo de datos
+
+```{r}
+#data <- read.csv2("data/GSPC.csv", sep = ",")
+```
+
+b\) Compruebe con el editor si las variables son de tipo numérica, carácter, lógico, etc.
+
+```{r}
+str(data)
+```
+
+c\) Para cada variable calcule el valor mínimo, máximo, media, cuartiles, rango, desvío estándar, IQR, MAD y coeficiente de variación (excluya el campo "Date").
+
+```{r}
+# Cálculo de estadísticas descriptivas para cada variable
+library(dplyr)
+library(stats)
+library(purrr)
+
+# Calcula las estadísticas descriptivas
+stats_data <- data %>%
+  summarize(
+    min = apply(., min),
+    max = apply(., max),
+    mean = apply(., 2, mean),
+   # q1 = apply(., 2, quantile, 0.25),
+    median = apply(., 2, median),
+    q3 = apply(., 2, quantile, 0.75),
+    range = apply(., 2, range),
+    sd = apply(., 2, sd),
+    iqr = apply(., 2, IQR),
+    mad = apply(., 2, mad),
+    cv = apply(., 2, function(x) sd(x) / mean(x))
+  )
+
+# Agrega los nombres de las columnas
+colnames(stats_data) <- c("min", "max", "mean", "q1", "median", "q3", "range", "sd", "iqr", "mad", "cv")
+
+# Muestra las estadísticas descriptivas
+stats_data
+
+```
+
+d\) Arme una lista para informar los resultados obtenidos en 3.
+
+e\) Realice un diagrama de tallo hoja para cada variable.
+
+f\) Realice y visualice en la misma ventana gráfica un histograma para cada variable.
+
+g\) En base a los precios ajustados, calcule los retornos logarítmicos diarios, semanales, mensuales, bimestrales, semestrales y anuales. Graficar el histograma de la serie de retornos y solape la curva normal. h) Realice boxplots "en paralelo" para las 4 variables (Volume, Adj Close, Retorno Diario Logarítmico, Close).
+
+i)  ¿Qué puede describir a partir del análisis realizado? \[Nota: Revisé los hechos estilizados de las series financieras. Se recomienda la lectura del libro de Tsay
