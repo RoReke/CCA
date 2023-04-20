@@ -52,7 +52,7 @@ ggplot(binom_cdf_data, aes(x = k_values, y = binom_cdf)) +
 c\) La probabilidad de obtener 3 aciertos.
 
 ```{r}
-dbinom(3, size = n, prob = p)
+qbinom(0.25, size = 10, prob = 0.25, FALSE)
 ```
 
 d\) La probabilidad de aprobar.
@@ -198,23 +198,38 @@ anulaciones es del 5%.
 con una probabilidad del 97 % que todos sus clientes tengan cabida en dicho vuelo?
 
 ```{r}
+# necesito la cantidad de reservas tal que el vuelo no este sobrevendido con una probabilidad del 97%
+plazas_disponibles <- 200
+# testeo que valor cumple esa condición
+data <- data.frame(
+  cantidad_reservas = plazas_disponibles:215, 
+  plazas_esperadas = qbinom(0.97, size = plazas_disponibles:215, 0.95)
+)
+data
+# => reservas = 205
+# viendolo graficamente 
 library(ggplot2)
+data <- data.frame(
+  reservas = 190:205,
+  probabilidad_acumulada = pbinom(190:205, size = 205, prob = 0.95)
+)
 
-reservas <- 200:220
-valores_qbinom <- qbinom(0.97, size = reservas, 0.95, lower.tail = FALSE)
-data <- data.frame(Reservas = reservas, Qbinom = valores_qbinom)
-interseccion <- data[data$Qbinom >= 200,][1,]
+# Crear el gráfico con ggplot2
+ggplot(data, aes(x = reservas, y = probabilidad_acumulada)) +
+  geom_line() +
+  geom_hline(yintercept = 0.97, linetype = "dashed", color = "red") +
+  labs(
+    title = "Dada la cantidad de reservas = 205", 
+    subtitle = "tengo una probabilidad acumulada de no sobrevender el vuelo de 97%",
+       x = "Cantidad de plazas",
+       y = "Probabilidad acumulada"
+  ) +
+  theme_minimal()
 
-ggplot(data, aes(x = Reservas, y = Qbinom)) +
-  geom_point() +
-  geom_point(data = interseccion, aes(x = Reservas, y = Qbinom), color = "green", size = 4, shape = 21) +
-  geom_hline(yintercept = 200, linetype = "dashed", color = "red") +
-  annotate("text", x = interseccion$Reservas, y = interseccion$Qbinom, label = paste("Intersección =", interseccion$Reservas), vjust = -1.5, color = "darkgreen") +
-  theme_minimal() +
-  labs(title = "Valores de qbinom en función del tamaño de reserva",
-       x = "Tamaño de reserva",
-       y = "Valores de qbinom") +
-  coord_cartesian(ylim = c(190, max(valores_qbinom) + 10))
+
+
+
+
 
 ```
 
@@ -507,7 +522,7 @@ proporcion_mayor_200 <- mean(resultados > 200)
 proporcion_mayor_200
 ```
 
-### Ejercicio 19
+### ☺Ejercicio 19
 
 Genere muestras de tamaño 10, 100, 500 y 1000 de una población que sigue una Distribución Normal con valor modal de 3,5 y desvío estándar igual a 2. Estudie el comportamiento de la media y el desvío estándar en las cuatro muestras
 
@@ -714,7 +729,7 @@ lanzamientos <- 10
 rbinom(lanzamientos, 1, p)
 ```
 
-### Ejercicio 29 
+### Ejercicio 29
 
 El archivo "Departamentos.txt" corresponde a un ejemplo hipotético de valores de venta en miles de dólares de departamentos de 2 3 y 4 dormitorios de departamentos en dos zonas A y D. a) Lea el archivo de datos b) Compruebe con el editor que las variables son de tipo numérica c) Para cada variable calcule el valor mínimo, máximo, media, cuartiles, rango, desvío estándar, IQR, MAD y coeficiente de variación. d) Arme una lista para informar los resultados obtenidos en 3. e) Realice un diagrama de tallo hoja para cada variable. f) Realice y visualice en la misma ventana gráfica un histograma para cada variable. g) Para los precios de los departamentos de 2 dormitorios de las zonas A y D realice un histograma en la misma escala y visualice en la misma ventana gráfica. h) Realice boxplots "en paralelo" para las 4 variables. i) ¿Qué puede describir a partir del análisis realizado?
 
